@@ -1,0 +1,99 @@
+// Version: 1.0.0
+type AccessLog__730717858 =
+  {
+    accessType : AccessType__506863866;
+    accessedAt : Timestamp__301639476;
+    doctorId : DoctorId__139287351;
+    id : LogId__472453763;
+    patientId : UserId__158757552
+  };
+type AccessType__506863866 = {#manual_id; #qr_scan};
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type DoctorId__139287351 = Nat;
+type DoctorProfile__232778670 =
+  {
+    contactPhone : Text;
+    email : Text;
+    hospitalName : Text;
+    id : DoctorId__139287351;
+    licenseNumber : Text;
+    name : Text;
+    principalId : Principal;
+    rejectionReason : ?Text;
+    requestedAt : Timestamp__301639476;
+    reviewedAt : ?Timestamp__301639476;
+    reviewedBy : ?Principal;
+    specialty : Text;
+    status : DoctorStatus__798663242
+  };
+type DoctorStatus__798663242 = {#approved; #pending; #rejected; #suspended};
+type EmergencyContact__19530646 =
+  {name : Text; phone : Text; relationship : Text};
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type List__415060402<T> = List__790383201<T>;
+type List__790383201<T> =
+  {
+    var blockIndex : Nat__490723111;
+    var blocks : [var [var ?T]];
+    var elementIndex : Nat__490723111
+  };
+type LogId__472453763 = Nat;
+type Map__158565046<K, V> = Map__297112838<K, V>;
+type Map__297112838<K, V> =
+  {var root : Node__46230540<K, V>; var size : Nat__490723111};
+type Map__605269027<K, V> = Map__158565046<K, V>;
+type Medication__710572348 = {dosage : Text; frequency : Text; name : Text};
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type PatientProfile__867459297 =
+  {
+    age : Nat;
+    allergies : [Text];
+    bloodGroup : Text;
+    chronicDiseases : [Text];
+    createdAt : Timestamp__301639476;
+    currentMedications : [Medication__710572348];
+    emergencyContacts : [EmergencyContact__19530646];
+    emergencyId : Text;
+    id : UserId__158757552;
+    insurancePolicyNumber : Text;
+    insuranceProvider : Text;
+    medicalHistory : Text;
+    name : Text;
+    principalId : Principal;
+    profilePhotoUrl : Text;
+    updatedAt : Timestamp__301639476
+  };
+type Timestamp__301639476 = Int;
+type UserId__158757552 = Nat;
+type UserRole__1073662873 = {#admin; #guest; #user};
+actor {
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__605269027<Principal, UserRole__1073662873>
+    };
+  stable doctorState :
+    {
+      accessLogs : List__415060402<AccessLog__730717858>;
+      counter :
+        {
+          var nextDoctorId : DoctorId__139287351;
+          var nextLogId : LogId__472453763
+        };
+      doctorByPrincipal : Map__605269027<Principal, DoctorId__139287351>;
+      doctors : Map__605269027<DoctorId__139287351, DoctorProfile__232778670>
+    };
+  stable patientState :
+    {
+      counter : {var nextId : UserId__158757552};
+      patientByEmergencyId : Map__605269027<Text, UserId__158757552>;
+      patientByPrincipal : Map__605269027<Principal, UserId__158757552>;
+      patients : Map__605269027<UserId__158757552, PatientProfile__867459297>
+    }
+};

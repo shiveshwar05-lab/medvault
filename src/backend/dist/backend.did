@@ -1,0 +1,142 @@
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type UserId = nat;
+type Timestamp = int;
+type SubmitDoctorRequestInput = 
+ record {
+   contactPhone: text;
+   email: text;
+   hospitalName: text;
+   licenseNumber: text;
+   name: text;
+   specialty: text;
+ };
+type RegisterPatientInput = 
+ record {
+   age: nat;
+   allergies: vec text;
+   bloodGroup: text;
+   chronicDiseases: vec text;
+   currentMedications: vec Medication;
+   emergencyContacts: vec EmergencyContact;
+   insurancePolicyNumber: text;
+   insuranceProvider: text;
+   medicalHistory: text;
+   name: text;
+   profilePhotoUrl: text;
+ };
+type PatientProfile = 
+ record {
+   age: nat;
+   allergies: vec text;
+   bloodGroup: text;
+   chronicDiseases: vec text;
+   createdAt: Timestamp;
+   currentMedications: vec Medication;
+   emergencyContacts: vec EmergencyContact;
+   emergencyId: text;
+   id: UserId;
+   insurancePolicyNumber: text;
+   insuranceProvider: text;
+   medicalHistory: text;
+   name: text;
+   principalId: principal;
+   profilePhotoUrl: text;
+   updatedAt: Timestamp;
+ };
+type PatientEmergencyInfo = 
+ record {
+   age: nat;
+   allergies: vec text;
+   bloodGroup: text;
+   chronicDiseases: vec text;
+   currentMedications: vec Medication;
+   emergencyContacts: vec EmergencyContact;
+   insurancePolicyNumber: text;
+   insuranceProvider: text;
+   name: text;
+ };
+type Medication = 
+ record {
+   dosage: text;
+   frequency: text;
+   name: text;
+ };
+type LogId = nat;
+type EmergencyContact = 
+ record {
+   name: text;
+   phone: text;
+   relationship: text;
+ };
+type DoctorStatus = 
+ variant {
+   approved;
+   pending;
+   rejected;
+   suspended;
+ };
+type DoctorProfile = 
+ record {
+   contactPhone: text;
+   email: text;
+   hospitalName: text;
+   id: DoctorId;
+   licenseNumber: text;
+   name: text;
+   principalId: principal;
+   rejectionReason: opt text;
+   requestedAt: Timestamp;
+   reviewedAt: opt Timestamp;
+   reviewedBy: opt principal;
+   specialty: text;
+   status: DoctorStatus;
+ };
+type DoctorId = nat;
+type DashboardStats = 
+ record {
+   pendingRequests: nat;
+   totalAccessLogs: nat;
+   totalDoctors: nat;
+   totalPatients: nat;
+ };
+type AccessType = 
+ variant {
+   manual_id;
+   qr_scan;
+ };
+type AccessLog = 
+ record {
+   accessType: AccessType;
+   accessedAt: Timestamp;
+   doctorId: DoctorId;
+   id: LogId;
+   patientId: UserId;
+ };
+service : {
+  _initializeAccessControl: () -> ();
+  approveDoctorRequest: (doctorId: DoctorId) -> ();
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  generateEmergencyId: () -> (text);
+  getAccessLogs: () -> (vec AccessLog) query;
+  getAllDoctors: () -> (vec DoctorProfile) query;
+  getCallerUserRole: () -> (UserRole) query;
+  getDashboardStats: () -> (DashboardStats) query;
+  getDoctorProfile: () -> (opt DoctorProfile) query;
+  getDoctorStatus: () -> (opt DoctorProfile) query;
+  getMyProfile: () -> (opt PatientProfile) query;
+  getPatientByEmergencyId: (emergencyId: text) -> (opt PatientProfile) query;
+  getPatientEmergencyInfo: (emergencyId: text, accessType: AccessType) ->
+   (opt PatientEmergencyInfo);
+  getPendingDoctorRequests: () -> (vec DoctorProfile) query;
+  isCallerAdmin: () -> (bool) query;
+  registerPatient: (input: RegisterPatientInput) -> (PatientProfile);
+  rejectDoctorRequest: (doctorId: DoctorId, reason: text) -> ();
+  submitDoctorRequest: (input: SubmitDoctorRequestInput) -> (DoctorProfile);
+  suspendDoctor: (doctorId: DoctorId) -> ();
+  updatePatientProfile: (input: RegisterPatientInput) -> (PatientProfile);
+}

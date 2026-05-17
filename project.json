@@ -1,0 +1,22 @@
+{
+  "overview": "The Digital Human Memory Vault is a secure emergency healthcare platform that stores patient critical medical information and provides instant access to authorized hospital staff during emergencies via QR code scanning. Includes a doctor registration and approval workflow managed by admins.",
+  "features": [
+    "Patient registration with full medical profile (blood group, allergies, medications, emergency contacts)",
+    "Emergency QR code ID generation — downloadable and scannable",
+    "Doctor/hospital registration requests with admin approval workflow",
+    "Authorized doctor emergency access to patient medical summaries",
+    "Admin dashboard: approve/reject doctors, view access logs and analytics",
+    "Access logging: tracks every doctor who views patient data"
+  ],
+  "category": "healthcare",
+  "tags": [
+    "healthcare",
+    "emergency",
+    "qr-code",
+    "medical-records",
+    "patient-identity",
+    "hospital",
+    "informatics"
+  ],
+  "last_updated": "2026-05-17T20:16:35.370Z"
+}
